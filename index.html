@@ -1,0 +1,1239 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Защитники Отечества | Исторический квест</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Playfair+Display:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        /* Стили полностью сохранены, без изменений */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --color-deep-blue: #0b2b3f;
+            --color-navy: #1a3f4f;
+            --color-gold: #e8c547;
+            --color-gold-light: #f5e2a3;
+            --color-burgundy: #9e2d2d;
+            --color-red-patriot: #c73e3e;
+            --color-red-gradient: linear-gradient(145deg, #c73e3e, #9e2d2d);
+            --color-blue-officer: #2c5a7a;
+            --color-steel: #6b8fa7;
+            --color-olive: #6d6d4e;
+            --shadow-elegant: 0 15px 35px rgba(0, 0, 0, 0.6);
+            --shadow-soft: 0 10px 25px rgba(0, 0, 0, 0.3);
+            --border-patriot: 2px solid rgba(199, 62, 62, 0.6);
+        }
+
+        body {
+            background-color: var(--color-deep-blue);
+            color: #f0f0f0;
+            font-family: 'Montserrat', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 30px 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('i.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            opacity: 0.35;
+            pointer-events: none;
+            z-index: 0;
+            filter: blur(2px);
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 30, 45, 0.4);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .snowflakes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 5;
+            overflow: hidden;
+        }
+
+        .snowflake {
+            position: absolute;
+            color: #fff;
+            user-select: none;
+            pointer-events: none;
+            opacity: 0.7;
+            font-size: 1.5rem;
+            top: -10%;
+            animation: snowfall linear infinite;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+        }
+
+        @keyframes snowfall {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0.7;
+            }
+
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0.2;
+            }
+        }
+
+        .click-stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+            overflow: hidden;
+        }
+
+        .click-star {
+            position: absolute;
+            color: #ff3333;
+            font-size: 1.8rem;
+            animation: starFade 1.5s ease-out forwards;
+            text-shadow: 0 0 10px rgba(255, 50, 50, 0.8);
+            z-index: 10000;
+            transform-origin: center;
+        }
+
+        @keyframes starFade {
+            0% {
+                transform: scale(1) rotate(0deg);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(1.5) rotate(180deg);
+                opacity: 0.8;
+            }
+
+            100% {
+                transform: scale(2) rotate(360deg) translateY(-100px);
+                opacity: 0;
+            }
+        }
+
+        .container {
+            max-width: 1000px;
+            width: 100%;
+            background: rgba(25, 45, 60, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 40px;
+            padding: 40px;
+            box-shadow: var(--shadow-elegant);
+            border: 1px solid rgba(232, 197, 71, 0.4);
+            position: relative;
+            z-index: 10;
+            animation: appearSmooth 1.2s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        @keyframes appearSmooth {
+            0% {
+                opacity: 0;
+                transform: translateY(40px) scale(0.98);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .container::after {
+            content: '★';
+            position: absolute;
+            bottom: 20px;
+            right: 30px;
+            font-size: 120px;
+            color: rgba(232, 197, 71, 0.1);
+            font-family: 'Playfair Display', serif;
+            pointer-events: none;
+            z-index: -1;
+            transform: rotate(15deg);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 3.2rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            background: linear-gradient(135deg, #ffffff, #e8c547);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+            font-family: 'Playfair Display', serif;
+            text-shadow: 0 5px 15px rgba(232, 197, 71, 0.3);
+            position: relative;
+            display: inline-block;
+        }
+
+        .header h1::before,
+        .header h1::after {
+            content: '⚔️';
+            font-size: 2.5rem;
+            margin: 0 20px;
+            opacity: 0.9;
+            filter: drop-shadow(0 0 5px rgba(232, 197, 71, 0.5));
+        }
+
+        .header p {
+            font-size: 1.3rem;
+            color: #f0f8ff;
+            font-weight: 400;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .date-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--color-red-gradient);
+            color: white;
+            padding: 10px 35px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.4rem;
+            margin-top: 20px;
+            box-shadow: 0 10px 25px rgba(158, 45, 45, 0.5);
+            border: 1px solid rgba(232, 197, 71, 0.4);
+            letter-spacing: 2px;
+        }
+
+        .quest-info {
+            background: linear-gradient(145deg, rgba(44, 90, 122, 0.8), rgba(25, 55, 75, 0.9));
+            border-radius: 24px;
+            padding: 25px;
+            margin-bottom: 40px;
+            border-left: 8px solid #e8c547;
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .quest-icon {
+            font-size: 2.8rem;
+            color: #e8c547;
+            filter: drop-shadow(0 0 5px rgba(232, 197, 71, 0.5));
+        }
+
+        .quest-info h2 {
+            color: #e8c547;
+            margin-bottom: 8px;
+            font-weight: 700;
+            font-size: 1.6rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .quest-info p {
+            line-height: 1.7;
+            color: #f0f8ff;
+            font-size: 1.05rem;
+        }
+
+        .progress-container {
+            margin-bottom: 35px;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .progress-label {
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #d0e0f0;
+        }
+
+        .question-counter {
+            background: rgba(232, 197, 71, 0.15);
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-weight: 600;
+            color: #e8c547;
+            border: 1px solid rgba(232, 197, 71, 0.4);
+        }
+
+        .progress-bar {
+            height: 12px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 30px;
+            overflow: hidden;
+            border: 1px solid rgba(232, 197, 71, 0.3);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #c73e3e, #e8c547);
+            width: 0%;
+            transition: width 0.6s cubic-bezier(0.65, 0, 0.35, 1);
+            border-radius: 30px;
+            position: relative;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .question-container {
+            margin-bottom: 30px;
+            display: none;
+        }
+
+        .question-container.active {
+            display: block;
+            animation: slideIn 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .question-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--color-red-gradient);
+            color: white;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            font-weight: 800;
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            box-shadow: 0 6px 15px rgba(158, 45, 45, 0.4);
+            border: 2px solid rgba(232, 197, 71, 0.5);
+        }
+
+        .question-text {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            color: #ffffff;
+            line-height: 1.5;
+            font-weight: 500;
+            padding-left: 10px;
+            border-left: 5px solid #e8c547;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .options-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        @media (min-width: 768px) {
+            .options-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .option {
+            background: rgba(30, 55, 75, 0.8);
+            border: 2px solid rgba(107, 143, 167, 0.6);
+            border-radius: 18px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(5px);
+        }
+
+        .option::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(232, 197, 71, 0.2), transparent);
+            transition: left 0.6s;
+        }
+
+        .option:hover::before {
+            left: 100%;
+        }
+
+        .option:hover {
+            background: rgba(44, 90, 122, 0.9);
+            border-color: #e8c547;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(232, 197, 71, 0.3);
+        }
+
+        .option.selected {
+            border-color: #e8c547;
+            background: rgba(44, 90, 122, 0.95);
+            box-shadow: 0 0 20px rgba(232, 197, 71, 0.4);
+        }
+
+        .option.correct {
+            background: linear-gradient(145deg, #1e5a3a, #2d6a4a);
+            border-color: #e8c547;
+        }
+
+        .option.incorrect {
+            background: linear-gradient(145deg, #7a3a3a, #6a2d2d);
+            border-color: #ffb5b5;
+        }
+
+        .option.disabled {
+            cursor: not-allowed;
+            opacity: 0.9;
+            transform: none !important;
+        }
+
+        .option-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(232, 197, 71, 0.2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1.2rem;
+            color: #e8c547;
+            flex-shrink: 0;
+            border: 1px solid rgba(232, 197, 71, 0.5);
+        }
+
+        .option-text {
+            flex-grow: 1;
+            font-size: 1.1rem;
+            line-height: 1.4;
+            color: #f0f8ff;
+        }
+
+        .navigation {
+            display: none;
+        }
+
+        .btn {
+            background: rgba(44, 90, 122, 0.9);
+            color: white;
+            border: 2px solid rgba(232, 197, 71, 0.4);
+            padding: 16px 32px;
+            border-radius: 60px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            letter-spacing: 1px;
+            flex: 1;
+            text-transform: uppercase;
+            backdrop-filter: blur(5px);
+        }
+
+        .btn i {
+            font-size: 1.1rem;
+        }
+
+        .btn:hover:not(:disabled) {
+            background: var(--color-red-gradient);
+            border-color: #e8c547;
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(158, 45, 45, 0.5);
+        }
+
+        .btn:disabled {
+            background: rgba(80, 100, 120, 0.6);
+            border-color: rgba(180, 180, 180, 0.3);
+            color: rgba(220, 220, 220, 0.7);
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-next {
+            background: var(--color-red-gradient);
+            border-color: #e8c547;
+        }
+
+        .result-container {
+            display: none;
+            text-align: center;
+            padding: 30px;
+            animation: fadeInScale 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .result-container.active {
+            display: block;
+        }
+
+        @keyframes fadeInScale {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .result-icon {
+            font-size: 6rem;
+            color: #e8c547;
+            margin-bottom: 20px;
+            animation: gentleBounce 3s infinite ease-in-out;
+            filter: drop-shadow(0 0 10px rgba(232, 197, 71, 0.5));
+        }
+
+        .result-icon.sad {
+            color: #9e9e9e;
+            animation: none;
+            filter: drop-shadow(0 0 10px rgba(158, 158, 158, 0.5));
+        }
+
+        @keyframes gentleBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        .result-title {
+            font-size: 3rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #e8c547, #ffffff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+            font-family: 'Playfair Display', serif;
+            text-shadow: 0 5px 15px rgba(232, 197, 71, 0.3);
+        }
+
+        .result-title.sad {
+            background: linear-gradient(135deg, #9e9e9e, #6d6d6d);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .score-display {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #e8c547;
+            margin: 20px 0;
+            text-shadow: 0 0 20px rgba(232, 197, 71, 0.5);
+        }
+
+        .score-display.sad {
+            color: #9e9e9e;
+            text-shadow: 0 0 20px rgba(158, 158, 158, 0.5);
+        }
+
+        .stars {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 25px 0;
+            flex-wrap: wrap;
+        }
+
+        .star {
+            font-size: 2.5rem;
+            color: #4a5a6a;
+            transition: all 0.3s;
+        }
+
+        .star.filled {
+            color: #e8c547;
+            animation: starPop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            filter: drop-shadow(0 0 15px rgba(232, 197, 71, 0.6));
+        }
+
+        .star.filled.sad {
+            color: #9e9e9e;
+            filter: drop-shadow(0 0 15px rgba(158, 158, 158, 0.6));
+        }
+
+        @keyframes starPop {
+            0% { transform: scale(0); }
+            80% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        .result-message {
+            font-size: 1.3rem;
+            line-height: 1.6;
+            margin: 30px 0;
+            color: #f0f8ff;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            font-weight: 400;
+        }
+
+        .certificate-form {
+            background: rgba(30, 55, 75, 0.85);
+            border-radius: 30px;
+            padding: 35px;
+            margin-top: 30px;
+            border: 2px solid rgba(232, 197, 71, 0.5);
+            backdrop-filter: blur(10px);
+        }
+
+        .certificate-form.sad {
+            border: 2px solid rgba(158, 158, 158, 0.5);
+        }
+
+        .form-title {
+            font-size: 1.8rem;
+            color: #e8c547;
+            margin-bottom: 20px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .form-title.sad {
+            color: #9e9e9e;
+        }
+
+        .input-group {
+            display: none; /* Поле ввода скрыто */
+        }
+
+        .download-btn {
+            background: linear-gradient(145deg, #c73e3e, #9e2d2d);
+            border: 2px solid #e8c547;
+            padding: 18px;
+            font-size: 1.2rem;
+            gap: 15px;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .download-btn.sad {
+            background: linear-gradient(145deg, #6d6d6d, #4a4a4a);
+            border: 2px solid #9e9e9e;
+        }
+
+        .download-btn i {
+            font-size: 1.3rem;
+        }
+
+        .certificate-preview {
+            display: none;
+        }
+
+        .signature {
+            margin-top: 30px;
+            color: rgba(240, 248, 255, 0.7);
+            font-size: 0.9rem;
+            text-align: center;
+            letter-spacing: 1px;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px;
+            }
+
+            .header h1 {
+                font-size: 2.2rem;
+            }
+
+            .header h1::before,
+            .header h1::after {
+                font-size: 1.8rem;
+                margin: 0 10px;
+            }
+
+            .question-text {
+                font-size: 1.2rem;
+            }
+
+            .btn {
+                padding: 14px 20px;
+                font-size: 1rem;
+            }
+
+            .result-title {
+                font-size: 2.2rem;
+            }
+
+            .star {
+                font-size: 1.8rem;
+            }
+        }
+
+        .retry-message {
+            background: rgba(199, 62, 62, 0.2);
+            border: 2px solid #c73e3e;
+            border-radius: 20px;
+            padding: 20px;
+            margin: 20px 0;
+            color: #ffd7d7;
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="snowflakes" id="snowflakes"></div>
+    <div class="click-stars" id="clickStars"></div>
+
+    <div class="container">
+        <div class="header">
+            <h1>Защитники Отечества</h1>
+            <div class="date-badge">
+                <i class="fas fa-calendar-alt"></i>С 23 ФЕВРАЛЯ
+                <i class="fas fa-shield-alt"></i>
+            </div>
+        </div>
+
+        <div class="quest-info">
+            <div class="quest-icon">
+                <i class="fas fa-scroll"></i>
+            </div>
+            <div>
+                <h2>Квест</h2>
+                <p>15 вопросов о защитниках Отечества. Проверьте свою историческую память и получите сертификат знатока.</p>
+            </div>
+        </div>
+
+        <div class="progress-container">
+            <div class="progress-header">
+                <span class="progress-label"><i class="fas fa-flag"></i> Боевое задание</span>
+                <span class="question-counter" id="questionCounter">1/15</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+
+        <!-- Вопросы с перемешанными правильными ответами -->
+        <div class="question-container active" id="question1">
+            <div class="question-number">I</div>
+            <div class="question-text">Как называется дверь в танке?</div>
+            <div class="options-container">
+                <div class="option" data-index="0" data-correct="false"><div class="option-icon">A</div><div class="option-text">Бронестворка</div></div>
+                <div class="option" data-index="1" data-correct="true"><div class="option-icon">B</div><div class="option-text">Люк</div></div>
+                <div class="option" data-index="2" data-correct="false"><div class="option-icon">C</div><div class="option-text">Дверца</div></div>
+                <div class="option" data-index="3" data-correct="false"><div class="option-icon">D</div><div class="option-text">Затвор</div></div>
+            </div>
+        </div>
+
+        <div class="question-container" id="question2">
+            <div class="question-number">II</div>
+            <div class="question-text">«Главнокомандующий» на судне – это…</div>
+            <div class="options-container">
+                <div class="option" data-index="0" data-correct="false"><div class="option-icon">A</div><div class="option-text">Штурман</div></div>
+                <div class="option" data-index="1" data-correct="false"><div class="option-icon">B</div><div class="option-text">Боцман</div></div>
+                <div class="option" data-index="2" data-correct="true"><div class="option-icon">C</div><div class="option-text">Капитан</div></div>
+                <div class="option" data-index="3" data-correct="false"><div class="option-icon">D</div><div class="option-text">Матрос</div></div>
+            </div>
+        </div>
+
+        <div class="question-container" id="question3">
+            <div class="question-number">III</div>
+            <div class="question-text">Как называют морского кулинара?</div>
+            <div class="options-container">
+                <div class="option" data-index="0" data-correct="false"><div class="option-icon">A</div><div class="option-text">Камбузник</div></div>
+                <div class="option" data-index="1" data-correct="true"><div class="option-icon">B</div><div class="option-text">Кок</div></div>
+                <div class="option" data-index="2" data-correct="false"><div class="option-icon">C</div><div class="option-text">Повар</div></div>
+                <div class="option" data-index="3" data-correct="false"><div class="option-icon">D</div><div class="option-text">Кок-мастер</div></div>
+            </div>
+        </div>
+
+        <div class="question-container" id="question4">
+            <div class="question-number">IV</div>
+            <div class="question-text">Что называют гаражом для самолёта?</div>
+            <div class="options-container">
+                <div class="option" data-index="0" data-correct="false"><div class="option-icon">A</div><div class="option-text">Эллинг</div></div>
+                <div class="option" data-index="1" data-correct="false"><div class="option-icon">B</div><div class="option-text">ВПП</div></div>
+                <div class="option" data-index="2" data-correct="false"><div class="option-icon">C</div><div class="option-text">Стоянка</div></div>
+                <div class="option" data-index="3" data-correct="true"><div class="option-icon">D</div><div class="option-text">Ангар</div></div>
+            </div>
+        </div>
+
+        <div class="question-container" id="question5">
+            <div class="question-number">V</div>
+            <div class="question-text">Как называется лестница, по которой поднимаются в самолёт?</div>
+            <div class="options-container">
+                <div class="option" data-index="0" data-correct="false"><div class="option-icon">A</div><div class="option-text">Ступени</div></div>
+                <div class="option" data-index="1" data-correct="false"><div class="option-icon">B</div><div class="option-text">Рамп</div></div>
+                <div class="option" data-index="2" data-correct="true"><div class="option-icon">C</div><div class="option-text">Трап</div></div>
+                <div class="option" data-index="3" data-correct="false"><div class="option-icon">D</div><div class="option-text">Эскалатор</div></div>
+            </div>
+        </div>
+
+        <div class="question-container" id="question6">
+            <div class="question-number">VI</div>
+            <div class="question-text">Сколько битв проиграл А.В. Суворов?</div>
+            <div class="options-container">
+                <div class="option" data-index="0" data-correct="false"><div class="option-icon">A</div><div class="option-text">Две</div></div>
+                <div class="option" data-index="1" data-correct="true"><div class="option-icon">B</div><div class="option-text">Ни одной</div></div>
+                <div class="option" data-index="2" data-correct="false"><div class="option-icon">C</div><div class="option-text">Одну</div></div>
+                <div class="option" data-index="3" data-correct="false"><div class="option-icon">D</div><div class="option-text">Три</div></div>
+            </div>
+        </div>
+
+        <div class="question-container" id="question7">
+            <div class="question-number">VII</div>
+            <div class="question-text">Чем солдат прикрывает голову во время боя?</div>
+            <div class="options-container">
+                <div class="option" data-index="0" data-correct="false"><div class="option-icon">A</div><div class="option-text">Беретом</div></div>
+                <div class="option" data-index="1" data-correct="false"><div class="option-icon">B</div><div class="option-text">Пилоткой</div></div>
+                <div class="option" data-index="2" data-correct="true"><div class="option-icon">C</div><div class="option-text">Каской</div></div>
+                <div class="option" data-index="3" data-correct="false"><div class="option-icon">D</div><div class="option-text">Фуражкой</div></div>
+            </div>
+        </div>
+
+        <div class="question-container" id="question8">
+            <div class="question-number">VIII</div>
+            <div class="question-text">Что носят на голове танкисты?</div>
+            <div class="options-container">
+                <div class="option" data-index="0" data-correct="false"><div class="option-icon">A</div><div class="option-text">Каску</div></div>
+                <div class="option" data-index="1" data-correct="false"><div class="option-icon">B</div><div class="option-text">Панаму</div></div>
+                <div class="option" data-index="2" data-correct="false"><div class="option-icon">C</div><div class="option-text">Берет</div></div>
+                <div class="option" data-index="3" data-correct="true"><div class="option-icon">D</div><div class="option-text">Шлем</div></div>
+            </div>
+        </div>
+
+        <div class="question-container" id="question9">
+            <div class="question-number">IX</div>
+            <div class="question-text">У солдата оно есть, но сослуживцы используют его гораздо чаще. О чём речь?</div>
+            <div class="options-container">
+                <div class="option" data-index="0" data-correct="false"><div class="option-icon">A</div><div class="option-text">Позывной</div></div>
+                <div class="option" data-index="1" data-correct="false"><div class="option-icon">B</div><div class="option-text">Звание</div></div>
+                <div class="option" data-index="2" data-correct="false"><div class="option-icon">C</div><div class="option-text">Фамилия</div></div>
+                <div class="option" data-index="3" data-correct="true"><div class="option-icon">D</div><div class="option-text">Имя</div></div>
+            </div>
+        </div>
+
+        <div class="question-container" id="question10">
+            <div class="question-number">X</div>
+            <div class="question-text">Из какой тарелки даже самый способный воин не утолит голод?</div>
+            <div class="options-container">
+                <div class="option" data-index="0" data-correct="false"><div class="option-icon">A</div><div class="option-text">Из глубокой</div></div>
+                <div class="option" data-index="1" data-correct="true"><div class="option-icon">B</div><div class="option-text">Из пустой</div></div>
+                <div class="option" data-index="2" data-correct="false"><div class="option-icon">C</div><div class="option-text">Из мелкой</div></div>
+                <div class="option" data-index="3" data-correct="false"><div class="option-icon">D</div><div class="option-text">Из треснутой</div></div>
+            </div>
+        </div>
+
+        <div class="question-container" id="question11">
+            <div class="question-number">XI</div>
+            <div class="question-text">Какая часть у винтовки и дерева называется одинаково?</div>
+            <div class="options-container">
+                <div class="option" data-index="0" data-correct="false"><div class="option-icon">A</div><div class="option-text">Крона</div></div>
+                <div class="option" data-index="1" data-correct="false"><div class="option-icon">B</div><div class="option-text">Корень</div></div>
+                <div class="option" data-index="2" data-correct="false"><div class="option-icon">C</div><div class="option-text">Ветка</div></div>
+                <div class="option" data-index="3" data-correct="true"><div class="option-icon">D</div><div class="option-text">Ствол</div></div>
+            </div>
+        </div>
+
+        <div class="question-container" id="question12">
+            <div class="question-number">XII</div>
+            <div class="question-text">Головной убор десантника называется…</div>
+            <div class="options-container">
+                <div class="option" data-index="0" data-correct="false"><div class="option-icon">A</div><div class="option-text">Будёновка</div></div>
+                <div class="option" data-index="1" data-correct="false"><div class="option-icon">B</div><div class="option-text">Фуражка</div></div>
+                <div class="option" data-index="2" data-correct="true"><div class="option-icon">C</div><div class="option-text">Берет</div></div>
+                <div class="option" data-index="3" data-correct="false"><div class="option-icon">D</div><div class="option-text">Пилотка</div></div>
+            </div>
+        </div>
+
+        <div class="question-container" id="question13">
+            <div class="question-number">XIII</div>
+            <div class="question-text">Какое колесо автомобиля не вращается, когда главнокомандующий подъезжает к штабу?</div>
+            <div class="options-container">
+                <div class="option" data-index="0" data-correct="false"><div class="option-icon">A</div><div class="option-text">Переднее</div></div>
+                <div class="option" data-index="1" data-correct="true"><div class="option-icon">B</div><div class="option-text">Запасное</div></div>
+                <div class="option" data-index="2" data-correct="false"><div class="option-icon">C</div><div class="option-text">Заднее</div></div>
+                <div class="option" data-index="3" data-correct="false"><div class="option-icon">D</div><div class="option-text">Правое</div></div>
+            </div>
+        </div>
+
+        <div class="question-container" id="question14">
+            <div class="question-number">XIV</div>
+            <div class="question-text">Офицерский головной убор называется…</div>
+            <div class="options-container">
+                <div class="option" data-index="0" data-correct="false"><div class="option-icon">A</div><div class="option-text">Папаха</div></div>
+                <div class="option" data-index="1" data-correct="false"><div class="option-icon">B</div><div class="option-text">Берет</div></div>
+                <div class="option" data-index="2" data-correct="false"><div class="option-icon">C</div><div class="option-text">Пилотка</div></div>
+                <div class="option" data-index="3" data-correct="true"><div class="option-icon">D</div><div class="option-text">Фуражка</div></div>
+            </div>
+        </div>
+
+        <div class="question-container" id="question15">
+            <div class="question-number">XV</div>
+            <div class="question-text">Как называлась древнерусская военная одежда?</div>
+            <div class="options-container">
+                <div class="option" data-index="0" data-correct="true"><div class="option-icon">A</div><div class="option-text">Кольчуга</div></div>
+                <div class="option" data-index="1" data-correct="false"><div class="option-icon">B</div><div class="option-text">Латы</div></div>
+                <div class="option" data-index="2" data-correct="false"><div class="option-icon">C</div><div class="option-text">Броня</div></div>
+                <div class="option" data-index="3" data-correct="false"><div class="option-icon">D</div><div class="option-text">Шлем</div></div>
+            </div>
+        </div>
+
+        <!-- Результат и кнопка -->
+        <div class="result-container" id="resultContainer">
+            <div class="result-icon" id="resultIcon">
+                <i class="fas fa-trophy"></i>
+            </div>
+            <div class="result-title" id="resultTitle">Поздравляем!</div>
+            <div class="score-display" id="scoreDisplay">0/15</div>
+            <div class="stars" id="starsContainer"></div>
+            <div class="result-message" id="resultMessage"></div>
+
+            <div class="certificate-form" id="certificateForm">
+                <div class="form-title" id="certificateFormTitle">
+                    <i class="fas fa-certificate"></i>
+                    <span id="certificateTitleText">Ваш результат</span>
+                </div>
+                <button class="btn download-btn" id="actionButton">
+                    <i class="fas fa-download" id="actionButtonIcon"></i> <span id="actionButtonText">Получить сертификат</span>
+                </button>
+            </div>
+
+            <button class="btn" id="restartButton" style="margin-top: 20px;">
+                <i class="fas fa-redo-alt"></i> ПРОЙТИ КВЕСТ ЕЩЁ РАЗ
+            </button>
+        </div>
+
+        <div class="signature">
+            <i class="fas fa-star"></i> С праздником, защитники! <i class="fas fa-star"></i>
+        </div>
+    </div>
+
+    <!-- Канвас больше не используется, но оставлен на всякий случай -->
+    <canvas id="certificateCanvas" style="display: none;" width="1200" height="848"></canvas>
+
+    <script>
+        class PatrioticQuest {
+            constructor() {
+                this.currentQuestion = 0;
+                this.totalQuestions = 15;
+                this.score = 0;
+                this.userAnswers = new Array(this.totalQuestions).fill(null);
+                
+                this.cacheElements();
+                this.init();
+                this.createSnowflakes();
+                this.setupClickStars();
+            }
+
+            setupClickStars() {
+                document.addEventListener('click', (e) => {
+                    this.createClickStar(e.clientX, e.clientY);
+                });
+            }
+
+            createClickStar(x, y) {
+                const container = document.getElementById('clickStars');
+                const starCount = 3;
+
+                for (let i = 0; i < starCount; i++) {
+                    const star = document.createElement('div');
+                    star.className = 'click-star';
+                    
+                    const offsetX = (Math.random() - 0.5) * 60;
+                    const offsetY = (Math.random() - 0.5) * 60;
+                    
+                    star.style.left = (x + offsetX) + 'px';
+                    star.style.top = (y + offsetY) + 'px';
+                    
+                    const size = Math.random() * 1.2 + 1.2;
+                    star.style.fontSize = size + 'rem';
+                    
+                    star.style.animationDelay = Math.random() * 0.2 + 's';
+                    
+                    const starChars = ['✭', '✮', '⭐'];
+                    star.textContent = starChars[Math.floor(Math.random() * starChars.length)];
+                    
+                    container.appendChild(star);
+                    
+                    setTimeout(() => {
+                        star.remove();
+                    }, 1500);
+                }
+            }
+
+            createSnowflakes() {
+                const snowflakesContainer = document.getElementById('snowflakes');
+                const snowflakeCount = 300;
+
+                for (let i = 0; i < snowflakeCount; i++) {
+                    const snowflake = document.createElement('div');
+                    snowflake.className = 'snowflake';
+                    
+                    const size = Math.random() * 1.5 + 0.8;
+                    snowflake.style.fontSize = size + 'rem';
+                    
+                    snowflake.style.left = Math.random() * 100 + '%';
+                    snowflake.style.animationDelay = Math.random() * 10 + 's';
+                    snowflake.style.animationDuration = Math.random() * 10 + 15 + 's';
+                    snowflake.style.opacity = Math.random() * 0.5 + 0.3;
+                    
+                    const snowflakeChars = ['❅', '❆', '✻', '✼'];
+                    snowflake.textContent = snowflakeChars[Math.floor(Math.random() * snowflakeChars.length)];
+                    
+                    snowflakesContainer.appendChild(snowflake);
+                }
+            }
+
+            cacheElements() {
+                this.elements = {
+                    questionContainers: document.querySelectorAll('.question-container'),
+                    restartButton: document.getElementById('restartButton'),
+                    actionButton: document.getElementById('actionButton'),
+                    progressFill: document.getElementById('progressFill'),
+                    questionCounter: document.getElementById('questionCounter'),
+                    resultContainer: document.getElementById('resultContainer'),
+                    resultIcon: document.getElementById('resultIcon'),
+                    resultTitle: document.getElementById('resultTitle'),
+                    scoreDisplay: document.getElementById('scoreDisplay'),
+                    resultMessage: document.getElementById('resultMessage'),
+                    starsContainer: document.getElementById('starsContainer'),
+                    certificateForm: document.getElementById('certificateForm'),
+                    certificateFormTitle: document.getElementById('certificateFormTitle'),
+                    certificateTitleText: document.getElementById('certificateTitleText'),
+                    actionButtonIcon: document.getElementById('actionButtonIcon'),
+                    actionButtonText: document.getElementById('actionButtonText')
+                };
+            }
+
+            init() {
+                this.setupEventListeners();
+                this.updateProgressBar();
+                this.updateCounter();
+                this.createStars();
+            }
+
+            createStars() {
+                this.elements.starsContainer.innerHTML = '';
+                for (let i = 0; i < this.totalQuestions; i++) {
+                    const star = document.createElement('i');
+                    star.className = 'fas fa-star star';
+                    this.elements.starsContainer.appendChild(star);
+                }
+            }
+
+            setupEventListeners() {
+                document.querySelectorAll('.option').forEach(option => {
+                    option.addEventListener('click', (e) => this.handleAnswer(e));
+                });
+
+                this.elements.restartButton.addEventListener('click', () => this.restartQuest());
+                // Обработчик actionButton будет назначен в showResults
+            }
+
+            handleAnswer(event) {
+                const option = event.currentTarget;
+                const questionContainer = option.closest('.question-container');
+                const questionIndex = parseInt(questionContainer.id.replace('question', '')) - 1;
+
+                if (this.userAnswers[questionIndex] !== null) return;
+
+                const allOptions = questionContainer.querySelectorAll('.option');
+
+                allOptions.forEach(opt => {
+                    opt.classList.remove('selected', 'correct', 'incorrect');
+                });
+
+                option.classList.add('selected');
+
+                const isCorrect = option.dataset.correct === 'true';
+
+                if (isCorrect) {
+                    option.classList.add('correct');
+                    this.score++;
+                } else {
+                    option.classList.add('incorrect');
+                    allOptions.forEach(opt => {
+                        if (opt.dataset.correct === 'true') {
+                            opt.classList.add('correct');
+                        }
+                    });
+                }
+
+                this.userAnswers[questionIndex] = isCorrect;
+                allOptions.forEach(opt => opt.classList.add('disabled'));
+
+                if (questionIndex === this.totalQuestions - 1) {
+                    setTimeout(() => this.showResults(), 800);
+                } else {
+                    setTimeout(() => this.goToNextQuestion(), 800);
+                }
+            }
+
+            goToNextQuestion() {
+                if (this.currentQuestion < this.totalQuestions - 1) {
+                    this.elements.questionContainers[this.currentQuestion].classList.remove('active');
+                    this.currentQuestion++;
+                    this.elements.questionContainers[this.currentQuestion].classList.add('active');
+                    this.updateProgressBar();
+                    this.updateCounter();
+                }
+            }
+
+            updateCounter() {
+                this.elements.questionCounter.textContent = `${this.currentQuestion + 1}/${this.totalQuestions}`;
+            }
+
+            updateProgressBar() {
+                const progress = ((this.currentQuestion + 1) / this.totalQuestions) * 100;
+                this.elements.progressFill.style.width = `${progress}%`;
+            }
+
+            showResults() {
+                this.elements.questionContainers.forEach(c => c.classList.remove('active'));
+                this.elements.resultContainer.classList.add('active');
+                this.elements.progressFill.style.width = '100%';
+
+                this.elements.scoreDisplay.textContent = `${this.score}/${this.totalQuestions}`;
+
+                const stars = this.elements.starsContainer.querySelectorAll('.star');
+                stars.forEach((star, index) => {
+                    if (index < this.score) {
+                        star.classList.add('filled');
+                    } else {
+                        star.classList.remove('filled');
+                    }
+                });
+
+                if (this.score >= 10) {
+                    // Хороший результат
+                    this.elements.resultIcon.innerHTML = '<i class="fas fa-trophy"></i>';
+                    this.elements.resultIcon.classList.remove('sad');
+                    
+                    this.elements.resultTitle.textContent = this.score === this.totalQuestions ? 'Доблесть и слава!' : 'Достойный результат!';
+                    this.elements.resultTitle.classList.remove('sad');
+                    
+                    this.elements.scoreDisplay.classList.remove('sad');
+                    
+                    this.elements.resultMessage.textContent = this.score === this.totalQuestions 
+                        ? 'Вы блестяще знаете историю! Нажмите кнопку, чтобы получить сертификат.'
+                        : 'Хорошие знания! Нажмите кнопку, чтобы получить сертификат.';
+                    
+                    this.elements.certificateForm.classList.remove('sad');
+                    this.elements.certificateFormTitle.classList.remove('sad');
+                    this.elements.actionButton.classList.remove('sad');
+                    
+                    this.elements.certificateTitleText.textContent = 'Ваш сертификат';
+                    this.elements.actionButtonIcon.className = 'fas fa-certificate';
+                    this.elements.actionButtonText.textContent = 'Получить сертификат';
+                    
+                    this.elements.actionButton.disabled = false;
+                    // Перенаправление на index2.html
+                    this.elements.actionButton.onclick = () => {
+                        window.location.href = 'index2.html';
+                    };
+                } else {
+                    // Плохой результат
+                    this.elements.resultIcon.innerHTML = '<i class="far fa-frown"></i>';
+                    this.elements.resultIcon.classList.add('sad');
+                    
+                    this.elements.resultTitle.textContent = 'Попробуйте снова';
+                    this.elements.resultTitle.classList.add('sad');
+                    
+                    this.elements.scoreDisplay.classList.add('sad');
+                    
+                    this.elements.resultMessage.textContent = 'К сожалению, вы набрали меньше 10 баллов. Попробуйте пройти квест еще раз!';
+                    
+                    this.elements.certificateForm.classList.add('sad');
+                    this.elements.certificateFormTitle.classList.add('sad');
+                    this.elements.actionButton.classList.add('sad');
+                    
+                    this.elements.certificateTitleText.textContent = 'Попробуйте еще раз';
+                    this.elements.actionButtonIcon.className = 'fas fa-redo-alt';
+                    this.elements.actionButtonText.textContent = 'Пройти заново';
+                    
+                    this.elements.actionButton.disabled = false;
+                    this.elements.actionButton.onclick = () => this.restartQuest();
+                }
+            }
+
+            restartQuest() {
+                this.currentQuestion = 0;
+                this.score = 0;
+                this.userAnswers = new Array(this.totalQuestions).fill(null);
+
+                document.querySelectorAll('.option').forEach(opt => {
+                    opt.classList.remove('selected', 'correct', 'incorrect', 'disabled');
+                });
+
+                this.elements.starsContainer.querySelectorAll('.star').forEach(s => s.classList.remove('filled'));
+
+                this.elements.questionContainers.forEach((c, i) => {
+                    c.classList.remove('active');
+                    if (i === 0) c.classList.add('active');
+                });
+
+                this.elements.resultContainer.classList.remove('active');
+                this.updateCounter();
+                this.updateProgressBar();
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            new PatrioticQuest();
+        });
+    </script>
+</body>
+</html>
