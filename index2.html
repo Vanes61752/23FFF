@@ -146,7 +146,7 @@
     <div class="sub">введите имя и скачайте сертификат</div>
 
     <div class="canvas-wrapper">
-        <canvas id="certCanvas"></canvas>
+        <canvas id="certCanvas" width="800" height="600"></canvas>
     </div>
 
     <div class="control-panel">
@@ -154,7 +154,7 @@
             <label>⭐</label>
             <input type="text" id="nameInput" placeholder="Имя и фамилия" value="">
         </div>
-        <button id="downloadBtn">⬇ Скачать</button>
+        <button id="downloadBtn" disabled>⬇ Скачать</button>
     </div>
 </div>
 
@@ -165,7 +165,7 @@
         const nameInput = document.getElementById('nameInput');
         const downloadBtn = document.getElementById('downloadBtn');
 
-        // Параметры текста на сертификате
+        // Параметры текста на сертификате (проценты от размеров canvas)
         const TEXT_X_PERCENT = 0.50;
         const TEXT_Y_PERCENT = 0.46;
         const FONT_SIZE_PERCENT = 0.04;
@@ -179,17 +179,155 @@
 
         // Переменные для изображения
         let image = new Image();
-        let imageLoaded = false;      // true, когда хотя бы одно изображение загружено
+        let imageLoaded = false;      // true, когда изображение успешно загружено
         let loadFailed = false;       // true, если все источники перебраны и ни один не загрузился
+        let adminMessageShown = false;// показано ли сообщение об ошибке (после таймера)
 
-        // Список источников для последовательной загрузки
+        // Таймер на 2 минуты (120000 мс)
+        let loadingTimer = null;
+
+        // Список источников для последовательной загрузки (первый — новый с Яндекс.Диска)
         const imageSources = [
+            'https://downloader.disk.yandex.ru/preview/b004b653f7a1849559212beb1c8d6e7d25a4b7d94d0812191bdfa643a396fe07/69975c92/Ed-YzqZR1X7HGMGolS6JuAcganYl5kixgJ40AwVHdiZrCNgWWpcerbfSkGosV7GWewmOZ23p5JHgLYQiXL-xXQ%3D%3D?uid=0&filename=Vepqh95_dRiJGfV_hZIyO2QekDng6X7GliEfeBJ7fHEyRROdCVoAqwJLyRhwdNf93brRyzL4DN4Cq20KOw_EV3ps.jpg&disposition=inline&hash=&limit=0&content_type=image%2Fjpeg&owner_uid=0&tknv=v3&size=2048x2048',
             'https://i.ibb.co/mC6JmSSs/gramota.png',
             'https://raw.githubusercontent.com/Vanes61752/23FFF/refs/heads/main/gramota.png',
             'gramota.png'   // локальный файл в той же папке
         ];
 
-        // Загружаем сохранённые записи
+        // === Вспомогательные функции для рисования на канвасе ===
+        function drawLoadingMessage() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#f8f0d5';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.strokeStyle = '#b49b6b';
+            ctx.lineWidth = 10;
+            ctx.strokeRect(10, 10, canvas.width-20, canvas.height-20);
+
+            ctx.font = 'bold 32px Georgia';
+            ctx.fillStyle = '#4d2e1b';
+            ctx.textAlign = 'center';
+            ctx.fillText('СЕРТИФИКАТ УЧАСТНИКА', canvas.width/2, 100);
+
+            ctx.font = '24px Arial';
+            ctx.fillStyle = '#2c3e50';
+            ctx.fillText('Загрузка фона, пожалуйста, подождите...', canvas.width/2, canvas.height/2);
+        }
+
+        function drawAdminMessage() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#f8f0d5';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.strokeStyle = '#b49b6b';
+            ctx.lineWidth = 10;
+            ctx.strokeRect(10, 10, canvas.width-20, canvas.height-20);
+
+            ctx.font = 'bold 32px Georgia';
+            ctx.fillStyle = '#4d2e1b';
+            ctx.textAlign = 'center';
+            ctx.fillText('СЕРТИФИКАТ УЧАСТНИКА', canvas.width/2, 100);
+
+            ctx.font = '24px Arial';
+            ctx.fillStyle = '#a12f2f';
+            ctx.fillText('Обратитесь к администратору:', canvas.width/2, canvas.height/2 - 30);
+            ctx.font = '20px monospace';
+            ctx.fillStyle = '#1e466e';
+            ctx.fillText('https://vk.com/vanes_6175', canvas.width/2, canvas.height/2 + 30);
+        }
+
+        // Отрисовка сертификата с текущим именем (если изображение загружено)
+        function drawCertificate(name) {
+            if (!imageLoaded) return;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+            if (name.trim() !== '') {
+                const x = canvas.width * TEXT_X_PERCENT;
+                const y = canvas.height * TEXT_Y_PERCENT;
+                const fontSize = canvas.height * FONT_SIZE_PERCENT;
+
+                ctx.font = `bold italic ${fontSize}px "Georgia", "Times New Roman", serif`;
+                ctx.fillStyle = '#2c1e0e';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.shadowColor = '#f9eac0';
+                ctx.shadowBlur = 10;
+                ctx.shadowOffsetX = 2;
+                ctx.shadowOffsetY = 2;
+
+                ctx.fillText(name, x, y);
+
+                ctx.shadowColor = 'transparent';
+                ctx.shadowBlur = 0;
+                ctx.shadowOffsetX = 0;
+                ctx.shadowOffsetY = 0;
+            }
+        }
+
+        // === Загрузка изображения (рекурсивная) ===
+        function tryLoadImage(sourceIndex) {
+            if (sourceIndex >= imageSources.length) {
+                // Все источники перебраны, ни один не загрузился
+                console.error('Не удалось загрузить изображение ни из одного источника');
+                loadFailed = true;
+                // Не рисуем сообщение сразу, ждём таймер
+                return;
+            }
+
+            const url = imageSources[sourceIndex];
+            console.log(`Пытаемся загрузить изображение из: ${url}`);
+
+            const tempImage = new Image();
+            tempImage.crossOrigin = 'anonymous'; // для CORS
+
+            tempImage.onload = function() {
+                console.log(`Успешно загружено из: ${url}`);
+                // Если таймер ещё не сработал, отменяем его
+                if (loadingTimer) {
+                    clearTimeout(loadingTimer);
+                    loadingTimer = null;
+                }
+
+                // Сохраняем загруженное изображение
+                image = tempImage;
+                imageLoaded = true;
+                loadFailed = false;
+                adminMessageShown = false;
+                downloadBtn.disabled = false; // разблокируем кнопку
+
+                // Устанавливаем размер canvas равным размеру изображения
+                canvas.width = image.width;
+                canvas.height = image.height;
+
+                // Рисуем сертификат с текущим именем
+                drawCertificate(nameInput.value);
+            };
+
+            tempImage.onerror = function() {
+                console.warn(`Не удалось загрузить из: ${url}, пробуем следующий источник...`);
+                tryLoadImage(sourceIndex + 1);
+            };
+
+            tempImage.src = url;
+        }
+
+        // === Запуск таймера на 2 минуты ===
+        function startLoadingTimer() {
+            if (loadingTimer) clearTimeout(loadingTimer);
+            loadingTimer = setTimeout(() => {
+                // Если изображение так и не загрузилось
+                if (!imageLoaded) {
+                    console.log('2 минуты истекли, изображение не загружено');
+                    adminMessageShown = true;
+                    loadFailed = true;  // фиксируем неудачу
+                    downloadBtn.disabled = true; // блокируем кнопку
+                    drawAdminMessage(); // показываем сообщение с ссылкой
+                }
+                loadingTimer = null;
+            }, 120000); // 2 минуты = 120000 мс
+        }
+
+        // === Загружаем сохранённые записи ===
         function loadRecords() {
             const stored = localStorage.getItem(STORAGE_KEY);
             if (stored) {
@@ -264,119 +402,28 @@
             }
         }
 
-        // Отрисовка сертификата с текущим именем (если изображение загружено)
-        function drawCertificate(name) {
-            if (!imageLoaded) return; // ничего не рисуем, если нет фона
-
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
-
-            if (name.trim() !== '') {
-                const x = canvas.width * TEXT_X_PERCENT;
-                const y = canvas.height * TEXT_Y_PERCENT;
-                const fontSize = canvas.height * FONT_SIZE_PERCENT;
-
-                ctx.font = `bold italic ${fontSize}px "Georgia", "Times New Roman", serif`;
-                ctx.fillStyle = '#2c1e0e';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.shadowColor = '#f9eac0';
-                ctx.shadowBlur = 10;
-                ctx.shadowOffsetX = 2;
-                ctx.shadowOffsetY = 2;
-
-                ctx.fillText(name, x, y);
-
-                ctx.shadowColor = 'transparent';
-                ctx.shadowBlur = 0;
-                ctx.shadowOffsetX = 0;
-                ctx.shadowOffsetY = 0;
-            }
-        }
-
-        // Функция для рисования сообщения об ошибке (когда все источники не загрузились)
-        function drawErrorMessage(message) {
-            // Устанавливаем размер canvas (можно задать фиксированный или пропорциональный)
-            canvas.width = 800;  // примерная ширина
-            canvas.height = 600; // примерная высота
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = '#f8f0d5';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.strokeStyle = '#b49b6b';
-            ctx.lineWidth = 10;
-            ctx.strokeRect(10, 10, canvas.width-20, canvas.height-20);
-
-            ctx.font = 'bold 32px Georgia';
-            ctx.fillStyle = '#4d2e1b';
-            ctx.textAlign = 'center';
-            ctx.fillText('СЕРТИФИКАТ УЧАСТНИКА', canvas.width/2, 100);
-
-            ctx.font = '24px Arial';
-            ctx.fillStyle = '#a12f2f';
-            ctx.fillText(message, canvas.width/2, canvas.height/2);
-        }
-
-        // Рекурсивная функция загрузки изображения из списка источников
-        function tryLoadImage(sourceIndex) {
-            if (sourceIndex >= imageSources.length) {
-                // Все источники перебраны, ни один не загрузился
-                console.error('Не удалось загрузить изображение ни из одного источника');
-                loadFailed = true;
-                imageLoaded = false;
-                downloadBtn.disabled = true; // блокируем кнопку
-                drawErrorMessage('Свяжитесь с администрацией');
-                return;
-            }
-
-            const url = imageSources[sourceIndex];
-            console.log(`Пытаемся загрузить изображение из: ${url}`);
-
-            const tempImage = new Image();
-            tempImage.crossOrigin = 'anonymous'; // для CORS
-
-            tempImage.onload = function() {
-                console.log(`Успешно загружено из: ${url}`);
-                // Сохраняем загруженное изображение в глобальную переменную
-                image = tempImage;
-                imageLoaded = true;
-                loadFailed = false;
-                downloadBtn.disabled = false; // разблокируем кнопку на всякий случай
-
-                // Устанавливаем размер canvas равным размеру изображения
-                canvas.width = image.width;
-                canvas.height = image.height;
-
-                // Рисуем сертификат с текущим именем
-                drawCertificate(nameInput.value);
-            };
-
-            tempImage.onerror = function() {
-                console.warn(`Не удалось загрузить из: ${url}, пробуем следующий источник...`);
-                // Пробуем следующий источник
-                tryLoadImage(sourceIndex + 1);
-            };
-
-            tempImage.src = url;
-        }
-
-        // Запускаем попытки загрузки
+        // === Инициализация ===
+        // Сразу показываем сообщение о загрузке
+        drawLoadingMessage();
+        // Запускаем таймер на 2 минуты
+        startLoadingTimer();
+        // Начинаем попытки загрузить изображение
         tryLoadImage(0);
 
         // При изменении имени перерисовываем сертификат, если фон загружен
         nameInput.addEventListener('input', function() {
             if (imageLoaded) {
                 drawCertificate(nameInput.value);
-            } else if (loadFailed) {
-                // Если загрузка окончательно не удалась, уже показывается ошибка
-                // Можно ничего не делать
+            } else if (adminMessageShown) {
+                // Если уже показано сообщение об ошибке, ничего не делаем
             }
         });
 
         // Обработчик кнопки скачивания
         downloadBtn.addEventListener('click', async function() {
             if (!imageLoaded) {
-                if (loadFailed) {
-                    alert('Фон сертификата не загружен. Свяжитесь с администрацией.');
+                if (adminMessageShown) {
+                    alert('Фон сертификата не загрузился. Пожалуйста, обратитесь к администратору: https://vk.com/vanes_6175');
                 } else {
                     alert('Изображение ещё загружается. Подождите несколько секунд и попробуйте снова.');
                 }
@@ -419,7 +466,7 @@
                 link.href = dataURL;
                 link.click();
             } catch (e) {
-                alert('Не удалось скачать, напишие администратору.');
+                alert('Не удалось скачать, напишите администратору.');
                 console.error(e);
             }
         });
